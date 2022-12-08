@@ -2,77 +2,74 @@
 //
 #include <vector>
 #include <iostream>
+#include "Animal.h"
+#include "Cow.h"
+#include "Frisian.h"
+#include "Sheep.h"
 
 using namespace std;
-class Animal
-{
-public:
-    virtual void speak(void) = 0;
-};
-class Sheep : public Animal
-{
-public:
-    void speak(void) {
-        cout << "Sheep says: \t\tbaa!" << endl;
-    }
-};
-class Cow : public Animal
-{
-public:
-    void speak(void) {
-        cout << "Cow says: \t\tmoo!" << endl;
-    }
-};
-class Frisian : public Cow
-{
-public:
-    void speak(void) {
-        cout << "Frisian Cow says: \tmoo (in black and white)!" << endl;
-    }
-};
-void main()
+
+int main()
 {
 
     vector<Animal*> container;
     bool finished = false;
     string s;
     char c;
+    int num = 0;
     while (!finished) {
         Animal* aP = nullptr;
         cout << "Create an animal: (C)ow, (F)risian or (S)heep (x to exit)" << endl;
 
         cin >> s;
         c = s[0];
+        if (c != 'x') {
+            cout << "Enter a number: " << endl;
+            cin >> num;
+        }
+        try {
+            num = (int)num;
+            if (num == 0) {
+                throw(num);
+            }
+            for (int x = 0; x < num; x++) {
+                switch (c) {
+                case 'c':
+                    aP = new Cow;
+                    break;
+                case 'f':
+                    aP = new Frisian;
+                    break;
+                case 's':
+                    aP = new Sheep;
+                    break;
+                case 'x':
+                    finished = true;
+                    break;
+                default:
+                    throw(num);
+                    break;
 
-        switch (c) {
-        case 'c':
-            aP = new Cow;
-            break;
-        case 'f':
-            aP = new Frisian;
-            break;
-        case 's':
-            aP = new Sheep;
-            break;
-        case 'x':
-            finished = true;
-            break;
-        default:
+                }
+            
+                if (aP != nullptr) {
+                    container.push_back(aP);
+                }
+            }
+        }
+        catch(...) {
             cout << "Invalid Input" << endl;
-            break;
-
+            return 0;
         }
-        if (aP != nullptr) {
-            container.push_back(aP);
-        }
-
     }
     
     for (int a = 0; a < container.size(); a++)
     {
         container[a]->speak();
+        delete container[a];
     }
-    
+    container.clear();
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
